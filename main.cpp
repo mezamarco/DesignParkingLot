@@ -89,11 +89,10 @@ public:
 
 
 	void toString(){
-	  std::cout << "This is a Truck : " << licensePlate 
-		 	<< " with size : " << size
-		      	<< "Is it parked : " << isParked
-			<< " , Location : " << location[0] << ","<< location[1]
-			<< "\n\n";
+	  std::cout << "\nThis is a Truck : " << licensePlate 
+		 	<< ".\nSize : " << size
+			<< "\nStart location : [" << location[0] << ","<< location[1] 
+			<< "]\n\n";
 	}
   
 	void printPlate(){
@@ -122,11 +121,10 @@ public:
 
 
 	void toString(){
-	  std::cout << "This is a Car : " << licensePlate 
-		 	<< " with size : " << size
-		      	<< "Is it parked : " << isParked
-			<< " , Location : " << location[0] << ","<< location[1]
-			<< "\n\n";
+	  std::cout << "\nThis is a Car : " << licensePlate 
+		 	<< ".\nSize : " << size
+			<< "\nStart location : [" << location[0] << ","<< location[1] 
+			<< "]\n\n";
 	}
 	
 	void printPlate(){
@@ -155,11 +153,10 @@ public:
 
 
 	void toString(){
-	  std::cout << "This is a Motorcycle : " << licensePlate 
-		 	<< " with size : " << size
-		      	<< "Is it parked : " << isParked
-			<< " , Location : " << location[0] << "," << location[1]
-			<< "\n\n";
+	  std::cout << "\nThis is a Motorcycle : " << licensePlate 
+		 	<< ".\nSize : " << size
+			<< "\nStart location : [" << location[0] << ","<< location[1] 
+			<< "]\n\n";
 	}
 	
 	void printPlate(){
@@ -208,7 +205,9 @@ public:
 	bool canFit(int i, int j,int size);
 	
 	bool parkTheVehicle(Vehicle* vehicle);
-  	bool removeVehicle(std::string plate);
+	bool removeVehicle(std::string plate);
+	
+	void spotInfo(int i, int j);
 };
 
 
@@ -303,6 +302,40 @@ int main(){
   std::cout <<"\n\n";
   theLot.printParkingLot();
   theLot.tellMeTheAvailableSpots();
+  std::cout <<"\n\n";
+
+
+  char ch;
+  
+  do{
+  	std::cout << "Do you want more information about a specific parking spot? (Y/N) : ";	 
+	std::cin >> ch;  
+  	
+	
+        int i,j;
+  	
+	if(ch == 'Y' || ch == 'y'){
+		std::cout << "What Floor? {0,1,2,3,4} : ";
+		std::cin >> i;
+		std::cout << "What Spot? {0,1,2,3,4,.....,17,18,19} : ";
+		std::cin >> j;
+
+
+
+		if( i >= 0 && j >=0 && i<=4 && j <=19){
+		   theLot.spotInfo(i,j); 
+		}
+		else{
+			std::cout << "Invalid spot, try again.\n";
+		}
+	
+	}
+
+ 
+  }while(ch == 'Y' || ch == 'y');
+
+
+
 
   //We need to delete all our vehicles that are stored in the heap.  
   for(Vehicle* temp : myVehicleVect){
@@ -544,8 +577,7 @@ bool ParkingLot::removeVehicle(std::string plate){
 			for(int m = j; m < limit; m++ ){
 				arr[i][m] =  nullptr;
 				std::cout << "From: " << "[" << i << "," << m  << "]\n";	
-
-				--availableSpots;
+				++availableSpots;
 			}	
 		         return 1;	
 			
@@ -557,4 +589,17 @@ bool ParkingLot::removeVehicle(std::string plate){
 
 	std::cout << "Failed: Vehicle does not exists in the Parking Lot\n";
 	return 0;
+}
+
+
+
+
+void ParkingLot::spotInfo(int i, int j){
+	if(arr[i][j]){
+		arr[i][j]->toString();
+	}
+	else{
+	  std::cout << "\nThis is an empty spot\n\n";
+	}
+	return;
 }
