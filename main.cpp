@@ -56,8 +56,10 @@ public:
 	return plate;
   
   }
-
-
+ 
+  std::string getPlate(){
+  	return this->licensePlate;
+  }
 
 
 };
@@ -206,6 +208,7 @@ public:
 	bool canFit(int i, int j,int size);
 	
 	bool parkTheVehicle(Vehicle* vehicle);
+  	bool removeVehicle(std::string plate);
 };
 
 
@@ -247,10 +250,18 @@ int main(){
 
   std::cout << "Placing all the vehicles into our parking lot\n";
 
+
+  std::vector<std::string> allThePlates;
+
+
   for(Vehicle* temp : myVehicleVect){
-  	if(theLot.parkTheVehicle(temp)){
+
+        if(theLot.parkTheVehicle(temp)){
 	  std::cout << "Inserted:\t"; 
 	  temp->printPlate();
+
+	 //Store all the license plates that are parked in the parking lot for referece
+	 allThePlates.push_back(temp->getPlate());
 	}
 	else{
 	 std::cout << "Failed:\t\t"; 
@@ -258,16 +269,46 @@ int main(){
 	}
 	
   }
+
   std::cout <<"\n\n";
   theLot.printParkingLot();
   theLot.tellMeTheAvailableSpots();
+  
+  std::cout <<"\n\nWe are now going to remove 3 random vehicles from the Parking Lot\n";
+  std::cout << "Requirement: We need to have at least 10 vehicles in the Parking Lot\n";
+
+  if(allThePlates.size()>=10){
+  	
+
+	  int randOne;
+	  int randTwo;	 
+	  int randThree;
+  
+	  do{  
+  		randOne = ( rand() % allThePlates.size());
+  		randTwo = ( rand() % allThePlates.size());
+  		randThree = ( rand() % allThePlates.size());
+  	  }while( (randOne == randTwo) || (randTwo == randThree )  || (randOne == randThree));
+
+	  //We have three unique license plates, lets remove these vehicles from the Parking Lot
+	  theLot.removeVehicle(allThePlates[randOne]);
+	  theLot.removeVehicle(allThePlates[randTwo]);
+	  theLot.removeVehicle(allThePlates[randThree]);
+  }
+  else{
+  	std::cout <<"\nWe don't have enough cars in the Parking Lot. (Need 10 or more)\n\n";
+  }
+
+
   std::cout <<"\n\n";
+  theLot.printParkingLot();
+  theLot.tellMeTheAvailableSpots();
 
   //We need to delete all our vehicles that are stored in the heap.  
   for(Vehicle* temp : myVehicleVect){
   	delete temp;
   }
-
+  std::cout << "\n";
 
   return 0;
 }
@@ -483,3 +524,37 @@ bool ParkingLot::canFit(int i, int j,int size){
 }
 
 
+bool ParkingLot::removeVehicle(std::string plate){
+
+	//We first need to find the given vehicle and 
+	//then make the following pointers point to nullptr
+	
+	std::cout << "\nRemoving: "<< plate << std::endl;
+	
+	for(int i = 0; i < 5; i++){
+	
+		for(int j = 0;  j < 20; j++){
+		  	
+			if(arr[i][j] && (arr[i][j]->getPlate() == plate) ){
+
+			int currSize = arr[i][j]->getSize();
+			int limit = currSize + j;
+
+			arr[i][j]->setLocation(-1,-1);
+			for(int m = j; m < limit; m++ ){
+				arr[i][m] =  nullptr;
+				std::cout << "From: " << "[" << i << "," << m  << "]\n";	
+
+				--availableSpots;
+			}	
+		         return 1;	
+			
+			}
+		
+		}
+	
+	}
+
+	std::cout << "Failed: Vehicle does not exists in the Parking Lot\n";
+	return 0;
+}
