@@ -21,8 +21,9 @@ public:
   //Therefore no constructor or destructor is needed
   virtual void toString() = 0;
   virtual void printPlate() = 0;
-  
-  
+  virtual ~Vehicle(){};
+
+
   int getSize(){
   	return size;
   }
@@ -60,8 +61,6 @@ public:
 
 
 };
-
-
 
 
 
@@ -195,7 +194,8 @@ public:
 	  this->vehicleCounter = 0; 
 	}
 	~ParkingLot(){
-	  //Deleting the parking lot
+		//Deleting the parking lot
+		std::cout << "\nDeleting the Parking Lot\n\n";
 	}
 
 
@@ -263,7 +263,12 @@ int main(){
   theLot.tellMeTheAvailableSpots();
   std::cout <<"\n\n";
 
-  
+  //We need to delete all our vehicles that are stored in the heap.  
+  for(Vehicle* temp : myVehicleVect){
+  	delete temp;
+  }
+
+
   return 0;
 }
 
