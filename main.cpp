@@ -195,7 +195,7 @@ public:
 	  this->vehicleCounter = 0; 
 	}
 	~ParkingLot(){
-	  //We need to delete all the Vehicles that appear in our parking lot
+	  //Deleting the parking lot
 	}
 
 
@@ -213,7 +213,6 @@ public:
 //Main function prototypes
 void populateVehicleVector(std::vector<Vehicle*>& myVehicleVect, int vehicleLimit);
 void displayVehicleVector(std::vector<Vehicle*>& myVect);
-
 
 int main(){
 
@@ -240,15 +239,31 @@ int main(){
   //What are the vehicles that we created?
   displayVehicleVector(myVehicleVect);
 
-
-
-
-
-
-
   theLot.printParkingLot();
   theLot.tellMeTheAvailableSpots();
+
   std::cout << "\n\n";
+
+
+  std::cout << "Placing all the vehicles into our parking lot\n";
+
+  for(Vehicle* temp : myVehicleVect){
+  	if(theLot.parkTheVehicle(temp)){
+	  std::cout << "Inserted:\t"; 
+	  temp->printPlate();
+	}
+	else{
+	 std::cout << "Failed:\t\t"; 
+	 temp->printPlate();
+	}
+	
+  }
+  std::cout <<"\n\n";
+  theLot.printParkingLot();
+  theLot.tellMeTheAvailableSpots();
+  std::cout <<"\n\n";
+
+  
   return 0;
 }
 
@@ -301,7 +316,6 @@ void displayVehicleVector(std::vector<Vehicle*>& myVect){
 
 
 
-
 void ParkingLot::clearParkingLot(){
 	for(int i = 0; i < 5; i++){
 		for(int j = 0; j < 20; j++ ){
@@ -325,7 +339,7 @@ void ParkingLot::printParkingLot(){
 	
 	  		  
 		if(arr[i][j]){
-		  std::cout << "1" << "  ";
+		  std::cout << arr[i][j]->getSize() << "  ";
 		} 
 		else{
 		  std::cout << "0" << "  ";
@@ -409,7 +423,7 @@ bool ParkingLot::parkTheVehicle(Vehicle* vehicle){
 
 	//Now go park the car, find the first available location, and check if it fits.
 	for(int i = 0; i<5; i++ ){
-		for(int j = 0; j <= 20 - size; i++){
+		for(int j = 0; j <= 20 - size; j++){
 			
 			if(arr[i][j] == nullptr){
 			  	
@@ -418,11 +432,18 @@ bool ParkingLot::parkTheVehicle(Vehicle* vehicle){
 					int limit = j+size;
 
 					for(int m = j; m < limit ;m++){
+
 						arr[i][m] = vehicle;
+
 						--availableSpots;
 					}
 					vehicle->setLocation(i,j);
+
 					++vehicleCounter;
+
+					if(vehicleCounter == 0){
+					  this->isFull == 1;
+					}
 
 					return 1;
 				}
