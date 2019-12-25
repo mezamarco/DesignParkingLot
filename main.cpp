@@ -247,7 +247,7 @@ int main(){
   std::cout << "\n\n";
 
 
-  std::cout << "Placing all the vehicles into our parking lot\n";
+  std::cout << "Placing all the vehicles that were generated into our parking lot\n";
 
 
   std::vector<std::string> allThePlates;
@@ -385,7 +385,7 @@ void populateVehicleVector(std::vector<Vehicle*>& myVehicleVect, int vehicleLimi
 
 void displayVehicleVector(std::vector<Vehicle*>& myVect){
 	
-	std::cout << "We are printing all our vehicles:\n";	
+	std::cout << "We have generated the following vehicles:\n";	
 	for(Vehicle* temp : myVect){
 		temp->printPlate();
 	}	
